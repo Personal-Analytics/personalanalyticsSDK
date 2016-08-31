@@ -1,0 +1,375 @@
+---
+swagger: "2.0"
+info:
+  version: "0.1.0"
+  title: "IBM Personal Analytics - Services API"
+basePath: "/api"
+schemes:
+- "http"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /channels:
+    get:
+      description: "Gets `channel` objects.\nOptional query param of **limit** determines\n\
+        size of returned array\n"
+      operationId: "listChannels"
+      parameters:
+      - name: "limit"
+        in: "query"
+        description: "maximum number of results to return"
+        required: false
+        type: "integer"
+        format: "int32"
+      - name: "page"
+        in: "query"
+        description: "page number (defaults to first)"
+        required: false
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "channel response"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/channel"
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/errorModel"
+      x-swagger-router-controller: "Default"
+    post:
+      description: "Creates a new `channel`."
+      operationId: "addChannel"
+      parameters:
+      - in: "body"
+        name: "channel"
+        description: "Channel to add"
+        required: true
+        schema:
+          $ref: "#/definitions/channel"
+      responses:
+        200:
+          description: "channel created successfully"
+          schema:
+            $ref: "#/definitions/channel"
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/errorModel"
+      x-swagger-router-controller: "Default"
+  /channels/tags/{tags}:
+    get:
+      description: "Gets channel objects that are associated with tags that are passed\
+        \ in"
+      operationId: "listChannelsByTags"
+      parameters:
+      - name: "tags"
+        in: "path"
+        description: "tags to search for"
+        required: true
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "csv"
+      responses:
+        200:
+          description: "channel response"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/channel"
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/errorModel"
+      x-swagger-router-controller: "Default"
+  /channels/user/{id}:
+    get:
+      description: "Gets channel objects that are owned by the user whose id is passed\
+        \ in in"
+      operationId: "listChannelsOwnedByUser"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "user whose channels to return"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "channel response"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/channel"
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/errorModel"
+      x-swagger-router-controller: "Default"
+  /channels/{id}:
+    get:
+      description: "Returns a channel based on a single ID"
+      operationId: "findChannelById"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of channel to fetch"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "channel response"
+          schema:
+            $ref: "#/definitions/channel"
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/errorModel"
+      x-swagger-router-controller: "Default"
+    put:
+      description: "modifies a channel based on its ID"
+      operationId: "editChannelById"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of channel to fetch"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "channel"
+        description: "Channel with updated values"
+        required: true
+        schema:
+          $ref: "#/definitions/channel"
+      responses:
+        200:
+          description: "channel has been modified"
+          schema:
+            $ref: "#/definitions/channel"
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/errorModel"
+      x-swagger-router-controller: "Default"
+    delete:
+      description: "deletes a single channel based on the ID supplied"
+      operationId: "deleteChannel"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of channel to delete"
+        required: true
+        type: "string"
+      responses:
+        204:
+          description: "channel deleted"
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/errorModel"
+      x-swagger-router-controller: "Default"
+  /tags:
+    get:
+      description: "Returns the set of distinct tags that are defined in all channels"
+      operationId: "listTags"
+      parameters: []
+      responses:
+        200:
+          description: "tags response"
+          schema:
+            type: "array"
+            items:
+              type: "string"
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/errorModel"
+      x-swagger-router-controller: "Default"
+  /users:
+    get:
+      description: "Gets `user` objects.\nOptional query param of **limit** determines\n\
+        size of returned array\n"
+      operationId: "listUsers"
+      parameters:
+      - name: "limit"
+        in: "query"
+        description: "maximum number of results to return"
+        required: false
+        type: "integer"
+        format: "int32"
+      - name: "page"
+        in: "query"
+        description: "page number (defaults to first)"
+        required: false
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "user response"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/user"
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/errorModel"
+      x-swagger-router-controller: "Default"
+    post:
+      description: "Creates a new `user`.  Id must be unique"
+      operationId: "addUser"
+      parameters:
+      - in: "body"
+        name: "user"
+        description: "user to add"
+        required: true
+        schema:
+          $ref: "#/definitions/user"
+      responses:
+        200:
+          description: "user created successfully"
+          schema:
+            $ref: "#/definitions/user"
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/errorModel"
+      x-swagger-router-controller: "Default"
+  /users/{id}:
+    get:
+      description: "Returns a user based on a single ID"
+      operationId: "findUserById"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of user to fetch"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "user response"
+          schema:
+            $ref: "#/definitions/user"
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/errorModel"
+      x-swagger-router-controller: "Default"
+    put:
+      description: "modifies a user based on its ID"
+      operationId: "editUserById"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of user to fetch"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "user"
+        description: "User with updated values"
+        required: true
+        schema:
+          $ref: "#/definitions/user"
+      responses:
+        200:
+          description: "user has been modified"
+          schema:
+            $ref: "#/definitions/user"
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/errorModel"
+      x-swagger-router-controller: "Default"
+    delete:
+      description: "deletes a single user based on the ID supplied"
+      operationId: "deleteUser"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of user to delete"
+        required: true
+        type: "string"
+      responses:
+        204:
+          description: "user deleted"
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/errorModel"
+      x-swagger-router-controller: "Default"
+definitions:
+  address:
+    type: "object"
+    properties:
+      line1:
+        type: "string"
+      line2:
+        type: "string"
+      city:
+        type: "string"
+      zip:
+        type: "number"
+      country:
+        type: "string"
+  user:
+    type: "object"
+    required:
+    - "_id"
+    - "name"
+    properties:
+      _id:
+        type: "string"
+      name:
+        type: "string"
+      email:
+        type: "string"
+      birthday:
+        type: "string"
+        format: "date"
+      address:
+        $ref: "#/definitions/address"
+      enrollments:
+        type: "array"
+        items:
+          $ref: "#/definitions/channel"
+  channel:
+    type: "object"
+    required:
+    - "name"
+    - "owner"
+    - "tags"
+    properties:
+      _id:
+        type: "string"
+      name:
+        type: "string"
+      owner:
+        type: "string"
+      description:
+        type: "string"
+      start_date:
+        type: "string"
+        format: "date"
+      private:
+        type: "boolean"
+      tags:
+        type: "array"
+        items:
+          type: "string"
+      status:
+        type: "string"
+  errorModel:
+    type: "object"
+    required:
+    - "code"
+    - "message"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      message:
+        type: "string"
